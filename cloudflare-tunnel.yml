@@ -1,0 +1,16 @@
+# Cloudflare Tunnel Configuration for GitControl
+# This file should be placed in your cloudflared config directory
+# Default location: C:\Users\{username}\.cloudflared\config.yml
+
+tunnel: YOUR_TUNNEL_ID_HERE
+credentials-file: C:\Users\{username}\.cloudflared\YOUR_TUNNEL_ID_HERE.json
+
+ingress:
+  # Route all traffic to your local GitControl application
+  - hostname: YOUR_DOMAIN_HERE.YOUR_SUBDOMAIN.workers.dev
+    service: http://localhost:3000
+  # Catch-all rule (required as the last rule)
+  - service: http_status:404
+
+# Optional: Enable metrics
+# metrics: 0.0.0.0:2000

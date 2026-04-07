@@ -1,0 +1,223 @@
+.issues-container {
+  width: 100%;
+}
+
+.issue-section {
+  margin: 30px 0;
+  padding: 0;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 20px 0 10px 0;
+  padding: 10px 0;
+  border-bottom: 2px solid #0066cc;
+}
+
+.issue-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.issue-table thead {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.issue-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.issue-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.issue-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.title-cell a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.title-cell a:hover {
+  text-decoration: underline;
+}
+
+.project-cell {
+  color: #666;
+  font-size: 13px;
+}
+
+.client-label-badge {
+  display: inline-block;
+  background-color: #e8f4f8;
+  color: #0066cc;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #b3d9ff;
+  white-space: nowrap;
+}
+
+.assignees-cell {
+  color: #555;
+}
+
+.days-open {
+  font-weight: 500;
+  color: #e74c3c;
+}
+
+.status-cell {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 12px;
+}
+
+.status-opened {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-closed {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+/* Production Issues Styling */
+.production-section {
+  background-color: #fff5f5;
+  border: 2px solid #fed7d7;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.production-section h2 {
+  color: #c53030;
+  margin-top: 0;
+}
+
+.production-issues-container {
+  width: 100%;
+}
+
+.production-table {
+  border: 2px solid #fed7d7;
+}
+
+.production-table thead {
+  background-color: #fed7d7;
+}
+
+.production-table th {
+  color: #742a2a;
+  font-weight: 700;
+}
+
+/* Priority-based row styling */
+.priority-critical {
+  background-color: #fed7d7 !important;
+  border-left: 4px solid #e53e3e;
+}
+
+.priority-high {
+  background-color: #feebc8 !important;
+  border-left: 4px solid #dd6b20;
+}
+
+.priority-medium {
+  background-color: #f0fff4 !important;
+  border-left: 4px solid #38a169;
+}
+
+/* Priority badge styling */
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.priority-badge.priority-critical {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.priority-badge.priority-high {
+  background-color: #dd6b20;
+  color: white;
+}
+
+.priority-badge.priority-medium {
+  background-color: #38a169;
+  color: white;
+}
+
+/* Days open styling for production issues */
+.days-open.priority-critical {
+  color: #c53030;
+  font-weight: 700;
+}
+
+.days-open.priority-high {
+  color: #c05621;
+  font-weight: 600;
+}
+
+.days-open.priority-medium {
+  color: #2f855a;
+  font-weight: 500;
+}
+
+/* No data cell for production issues table */
+.no-data-cell {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 16px;
+  font-style: italic;
+  background-color: #f9f9f9;
+}
+
+/* Date and time column styling */
+.date-cell {
+  color: #666;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.time-cell {
+  color: #555;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  background-color: #f8f9fa;
+}
