@@ -1,52 +1,137 @@
 .config-form {
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.config-form h2 {
-  margin-top: 0;
-  color: #333;
+  margin: 0 0 20px;
+  padding: 14px;
+  border: 1px solid #e6edf5;
+  border-radius: 10px;
+  background-color: #fbfdff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
+  min-width: 220px;
+  flex: 1 1 220px;
+}
+
+.token-group {
+  flex: 1 1 300px;
+}
+
+.projects-group {
+  flex: 2 1 500px;
+}
+
+.assignees-group {
+  flex: 1 1 300px;
 }
 
 .form-group label {
   font-weight: 600;
-  margin-bottom: 5px;
-  color: #555;
+  margin-bottom: 6px;
+  color: #2f3a4a;
+  font-size: 13px;
 }
 
-.form-group input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.form-group input,
+.form-group select {
+  min-height: 40px;
+  padding: 9px 10px;
+  border: 1px solid #ccd8e6;
+  border-radius: 6px;
   font-size: 14px;
   font-family: inherit;
+  color: #1f2937;
+  background-color: #fff;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #0066cc;
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-.form-group input:disabled {
+.form-group input:disabled,
+.form-group select:disabled {
   background-color: #f0f0f0;
   cursor: not-allowed;
 }
 
+.selected-projects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.selected-project-chip {
+  border: 1px solid #b8d5f6;
+  background: #eaf3ff;
+  color: #144e8c;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.selected-project-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.project-autocomplete-results {
+  margin-top: 8px;
+  border: 1px solid #ccd8e6;
+  border-radius: 6px;
+  background: #fff;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.project-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #253043;
+}
+
+.project-option:last-child {
+  border-bottom: none;
+}
+
+.project-option input {
+  width: 14px;
+  height: 14px;
+}
+
+.project-autocomplete-hint,
+.project-autocomplete-error {
+  margin: 0;
+  padding: 10px;
+  font-size: 13px;
+}
+
+.project-autocomplete-hint {
+  color: #666;
+}
+
+.project-autocomplete-error {
+  color: #b00020;
+}
+
 .form-group small {
   font-size: 12px;
-  color: #999;
-  margin-top: 5px;
+  color: #5d6b7d;
+  margin-top: 6px;
+  line-height: 1.35;
 }
 
 .config-form button {
@@ -61,6 +146,12 @@
   transition: background-color 0.2s;
 }
 
+.load-issues-btn {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  min-height: 40px;
+}
+
 .config-form button:hover:not(:disabled) {
   background-color: #0052a3;
 }
@@ -68,4 +159,14 @@
 .config-form button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .projects-group {
+    flex: 1 1 100%;
+  }
+
+  .load-issues-btn {
+    width: 100%;
+  }
 }

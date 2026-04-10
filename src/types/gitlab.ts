@@ -38,6 +38,12 @@ export interface GitLabConfig {
   assigneeUsernames?: string[];
 }
 
+export interface GitLabProject {
+  id: number;
+  name: string;
+  path_with_namespace: string;
+}
+
 export interface IssuesByUser {
   user: GitLabUser;
   issues: GitLabIssue[];

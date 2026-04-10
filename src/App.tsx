@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import './App.css'
 import { ConfigForm } from './components/ConfigForm'
 import { IssuesByUserDisplay, ProductionIssueTable } from './components/IssueTable'
@@ -23,6 +24,37 @@ function App() {
       setProductionIssues(prodIssues)
       setIsConfigured(true)
     } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        const refreshedToken = window.prompt('Your GitLab token has expired. Enter a new token to continue:')
+        if (refreshedToken && refreshedToken.trim()) {
+          const retriedConfig: GitLabConfig = {
+            ...config,
+            personalAccessToken: refreshedToken.trim(),
+          }
+
+          localStorage.setItem('gitlab_personal_access_token', refreshedToken.trim())
+
+          try {
+            gitlabService.setConfig(retriedConfig)
+            const { regularIssues, productionIssues: prodIssues } = await gitlabService.getOpenIssuesByProjects()
+            setIssuesByUser(regularIssues)
+            setProductionIssues(prodIssues)
+            setIsConfigured(true)
+            setError(null)
+            return
+          } catch (retryErr) {
+            setError(retryErr instanceof Error ? retryErr.message : 'Failed to fetch issues after token refresh')
+            setIsConfigured(false)
+            return
+          }
+        }
+
+        localStorage.removeItem('gitlab_personal_access_token')
+        setError('GitLab token expired. Enter a new token to continue.')
+        setIsConfigured(false)
+        return
+      }
+
       setError(err instanceof Error ? err.message : 'Failed to fetch issues')
       setIsConfigured(false)
     } finally {

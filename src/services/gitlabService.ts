@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import type { GitLabIssue, GitLabConfig, IssuesByUser } from '../types/gitlab';
+import type { GitLabIssue, GitLabConfig, IssuesByUser, GitLabProject } from '../types/gitlab';
 
 class GitLabService {
   private client: AxiosInstance | null = null;
@@ -27,6 +27,46 @@ class GitLabService {
         'PRIVATE-TOKEN': config.personalAccessToken,
       },
     });
+  }
+
+  async getAccessibleProjects(instanceUrl: string, personalAccessToken: string): Promise<GitLabProject[]> {
+    const discoveryClient = axios.create({
+      baseURL: `${instanceUrl}/api/v4`,
+      headers: {
+        'PRIVATE-TOKEN': personalAccessToken,
+      },
+    });
+
+    const projects: GitLabProject[] = [];
+    const perPage = 100;
+    let page = 1;
+
+    while (true) {
+      const response = await discoveryClient.get<GitLabProject[]>('/projects', {
+        params: {
+          membership: true,
+          archived: false,
+          simple: true,
+          per_page: perPage,
+          page,
+          order_by: 'path',
+          sort: 'asc',
+        },
+      });
+
+      projects.push(...response.data);
+
+      if (response.data.length < perPage) {
+        break;
+      }
+
+      page += 1;
+      if (page > 20) {
+        break;
+      }
+    }
+
+    return projects.sort((a, b) => a.path_with_namespace.localeCompare(b.path_with_namespace));
   }
 
   async getOpenIssuesByProjects(): Promise<{ regularIssues: IssuesByUser[]; productionIssues: GitLabIssue[] }> {
