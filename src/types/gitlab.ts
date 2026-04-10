@@ -36,6 +36,7 @@ export interface GitLabConfig {
   personalAccessToken: string;
   projectIds: string[];
   assigneeUsernames?: string[];
+  authorUsernames?: string[];
 }
 
 export interface GitLabProject {

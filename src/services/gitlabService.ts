@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import type { GitLabIssue, GitLabConfig, IssuesByUser, GitLabProject } from '../types/gitlab';
+import type { GitLabIssue, GitLabConfig, IssuesByUser, GitLabProject, GitLabUser } from '../types/gitlab';
 
 class GitLabService {
   private client: AxiosInstance | null = null;
@@ -67,6 +67,55 @@ class GitLabService {
     }
 
     return projects.sort((a, b) => a.path_with_namespace.localeCompare(b.path_with_namespace));
+  }
+
+  async getProjectUsers(instanceUrl: string, personalAccessToken: string, projectIds: string[]): Promise<GitLabUser[]> {
+    if (projectIds.length === 0) {
+      return [];
+    }
+
+    const discoveryClient = axios.create({
+      baseURL: `${instanceUrl}/api/v4`,
+      headers: {
+        'PRIVATE-TOKEN': personalAccessToken,
+      },
+    });
+
+    const usersByUsername = new Map<string, GitLabUser>();
+    const perPage = 100;
+
+    for (const projectId of projectIds) {
+      let page = 1;
+
+      while (true) {
+        try {
+          const response = await discoveryClient.get<GitLabUser[]>(`/projects/${projectId}/members/all`, {
+            params: {
+              per_page: perPage,
+              page,
+            },
+          });
+
+          response.data.forEach(user => {
+            usersByUsername.set(user.username, user);
+          });
+
+          if (response.data.length < perPage) {
+            break;
+          }
+
+          page += 1;
+          if (page > 20) {
+            break;
+          }
+        } catch (error) {
+          console.warn(`Unable to load members for project ${projectId}`, error);
+          break;
+        }
+      }
+    }
+
+    return Array.from(usersByUsername.values()).sort((a, b) => a.username.localeCompare(b.username));
   }
 
   async getOpenIssuesByProjects(): Promise<{ regularIssues: IssuesByUser[]; productionIssues: GitLabIssue[] }> {
@@ -140,8 +189,10 @@ class GitLabService {
         allIssues.push(...issuesWithProject);
       }
 
+      const issuesFilteredByAuthor = this.filterIssuesByAuthors(allIssues);
+
       // Separate production issues from regular issues
-      const allProductionIssues = allIssues.filter(issue =>
+      const allProductionIssues = issuesFilteredByAuthor.filter(issue =>
         this.hasMatchingLabel(issue.labels, 'production issue') &&
         !this.hasMatchingLabel(issue.labels, 'error type core issues')
       );
@@ -149,7 +200,7 @@ class GitLabService {
       // Apply assignee filtering to production issues
       const productionIssues = this.filterIssuesByAssignees(allProductionIssues);
 
-      const regularIssues = allIssues.filter(issue =>
+      const regularIssues = issuesFilteredByAuthor.filter(issue =>
         !this.hasMatchingLabel(issue.labels, 'production issue')
       );
 
@@ -201,6 +252,16 @@ class GitLabService {
         return filterUsernames.includes(assignee.username);
       });
     });
+  }
+
+  private filterIssuesByAuthors(issues: GitLabIssue[]): GitLabIssue[] {
+    const filterUsernames = this.config?.authorUsernames;
+
+    if (!filterUsernames || filterUsernames.length === 0) {
+      return issues;
+    }
+
+    return issues.filter(issue => filterUsernames.includes(issue.author.username));
   }
 
   private groupIssuesByAssignee(issues: GitLabIssue[]): IssuesByUser[] {

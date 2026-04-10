@@ -25,32 +25,9 @@ function App() {
       setIsConfigured(true)
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
-        const refreshedToken = window.prompt('Your GitLab token has expired. Enter a new token to continue:')
-        if (refreshedToken && refreshedToken.trim()) {
-          const retriedConfig: GitLabConfig = {
-            ...config,
-            personalAccessToken: refreshedToken.trim(),
-          }
-
-          localStorage.setItem('gitlab_personal_access_token', refreshedToken.trim())
-
-          try {
-            gitlabService.setConfig(retriedConfig)
-            const { regularIssues, productionIssues: prodIssues } = await gitlabService.getOpenIssuesByProjects()
-            setIssuesByUser(regularIssues)
-            setProductionIssues(prodIssues)
-            setIsConfigured(true)
-            setError(null)
-            return
-          } catch (retryErr) {
-            setError(retryErr instanceof Error ? retryErr.message : 'Failed to fetch issues after token refresh')
-            setIsConfigured(false)
-            return
-          }
-        }
-
         localStorage.removeItem('gitlab_personal_access_token')
-        setError('GitLab token expired. Enter a new token to continue.')
+        window.dispatchEvent(new Event('gitlab-token-invalid'))
+        setError('GitLab token expired. Update it from Token Settings and load again.')
         setIsConfigured(false)
         return
       }
@@ -81,7 +58,7 @@ function App() {
         {isConfigured && !loading && (
           <>
             <div className="dashboard-section production-section">
-              <h2>🚨 Production Issues Without Error Type Core Issues ({productionIssues.length})</h2>
+              <h2>Production Issues ({productionIssues.length})</h2>
               <ProductionIssueTable issues={productionIssues} />
             </div>
             
